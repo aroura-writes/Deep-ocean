@@ -71,19 +71,23 @@ export default function Navbar() {
           return (
             <Link key={href} href={href} style={{
               textDecoration: 'none',
-              fontFamily: 'DM Sans, sans-serif',
-              fontSize: '13px',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: active ? '#4ec9b0' : '#7baccc',
-              transition: 'color 0.25s',
-              borderBottom: active ? '1px solid #4ec9b0' : '1px solid transparent',
-              paddingBottom: '2px',
-            }}
-            onMouseEnter={e => { if (!active) (e.target as HTMLElement).style.color = '#c8dff0' }}
-            onMouseLeave={e => { if (!active) (e.target as HTMLElement).style.color = '#7baccc' }}
-            >
-              {label}
+            }}>
+              <span style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '13px',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: active ? '#4ec9b0' : '#7baccc',
+                transition: 'color 0.25s',
+                borderBottom: active ? '1px solid #4ec9b0' : '1px solid transparent',
+                paddingBottom: '2px',
+                display: 'inline-block',
+              }}
+              onMouseEnter={e => { if (!active) (e.currentTarget as HTMLElement).style.color = '#c8dff0' }}
+              onMouseLeave={e => { if (!active) (e.currentTarget as HTMLElement).style.color = '#7baccc' }}
+              >
+                {label}
+              </span>
             </Link>
           )
         })}
