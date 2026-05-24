@@ -1,3 +1,5 @@
+'use client'
+
 import { getAllPosts } from '@/lib/contentful'
 import Link from 'next/link'
 import ScrollReveal from '@/components/ScrollReveal'
