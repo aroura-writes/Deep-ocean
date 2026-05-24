@@ -43,6 +43,7 @@ export default async function BlogPage() {
                   <div style={{
                     background: '#071c2e', border: '0.5px solid #1a3a52', borderRadius: '14px',
                     padding: '1.75rem', transition: 'border-color .3s, box-shadow .3s, transform .3s',
+                    cursor: 'pointer',
                   }}
                   onMouseEnter={e => {
                     const el = e.currentTarget
