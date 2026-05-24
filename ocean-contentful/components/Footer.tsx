@@ -28,16 +28,20 @@ export default function Footer() {
         <nav style={{ display: 'flex', gap: '2rem' }}>
           {['/', '/explore', '/blog', '/about'].map((href, i) => (
             <Link key={href} href={href} style={{
-              fontFamily: 'DM Sans, sans-serif',
-              fontSize: '11px', letterSpacing: '0.15em',
-              textTransform: 'uppercase', color: '#2c5470',
               textDecoration: 'none',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => (e.target as HTMLElement).style.color = '#4ec9b0'}
-            onMouseLeave={e => (e.target as HTMLElement).style.color = '#2c5470'}
-            >
-              {['Home', 'Explore', 'Journal', 'About'][i]}
+            }}>
+              <span style={{
+                fontFamily: 'DM Sans, sans-serif',
+                fontSize: '11px', letterSpacing: '0.15em',
+                textTransform: 'uppercase', color: '#2c5470',
+                transition: 'color 0.2s',
+                display: 'inline-block',
+              }}
+              onMouseEnter={e => (e.currentTarget as HTMLElement).style.color = '#4ec9b0'}
+              onMouseLeave={e => (e.currentTarget as HTMLElement).style.color = '#2c5470'}
+              >
+                {['Home', 'Explore', 'Journal', 'About'][i]}
+              </span>
             </Link>
           ))}
         </nav>
