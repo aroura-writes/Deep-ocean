@@ -5,7 +5,7 @@ import ScrollReveal from '@/components/ScrollReveal'
 export const revalidate = 60 // ISR: revalidate every 60 seconds
 
 export default async function BlogPage() {
-  let posts = []
+  let posts: any[] = []
   try {
     posts = await getAllPosts()
   } catch {
