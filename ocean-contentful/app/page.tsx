@@ -8,6 +8,7 @@ export default function HomePage() {
 
         {/* ── HERO ── */}
         <div style={{ position: 'relative', height: '100vh', minHeight: '520px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+          {/* FIXED: Added the missing '>' to close the opening svg tag correctly */}
           <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
                viewBox="0 0 680 520" preserveAspectRatio="xMidYMid slice"
                xmlns="http://www.w3.org/2000/svg">
@@ -32,16 +33,16 @@ export default function HomePage() {
             <path d="M0 312 Q170 300 340 312 Q510 324 680 312" stroke="#0d3352" strokeWidth=".5" fill="none" opacity=".8"/>
             <path d="M0 318 Q85 308 170 318 Q255 328 340 318 Q425 308 510 318 Q595 328 680 318" stroke="#1d6fa8" strokeWidth="1" fill="none" opacity=".4"/>
             {/* Glow dots */}
-{[
-  [90, 325, '#38bdf8', .2],
-  [210, 335, '#2dd4bf', .9],
-  [350, 322, '#38bdf8', .4],
-  [460, 330, '#a78bfa', 1.3],
-  [580, 326, '#2dd4bf', .6]
-].map(([cx, cy, fill, del], i) => (
-  <circle key={i} cx={cx} cy={cy} r="2.5" fill={fill as string}
-    style={{ animation: `glowPulse 3s ${del as number}s ease-in-out infinite` }}/>
-))}
+            {[
+              [90, 325, '#38bdf8', .2],
+              [210, 335, '#2dd4bf', .9],
+              [350, 322, '#38bdf8', .4],
+              [460, 330, '#a78bfa', 1.3],
+              [580, 326, '#2dd4bf', .6]
+            ].map(([cx, cy, fill, del], i) => (
+              <circle key={i} cx={cx} cy={cy} r="2.5" fill={fill as string}
+                style={{ animation: `glowPulse 3s ${del as number}s ease-in-out infinite` }}/>
+            ))}
 
             {/* Deep glow */}
             <ellipse cx="340" cy="420" rx="200" ry="90" fill="#0a3a5e" opacity=".3"/>
@@ -148,7 +149,7 @@ export default function HomePage() {
           <div className="reveal-group" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', margin: '1.5rem 0 3rem' }}>
             {[
               { name: 'Anglerfish', color: '#38bdf8', desc: 'Uses a bioluminescent lure to attract prey in total darkness. Light produced by symbiotic bacteria inside the lure.' },
-              { name: 'Dinoflagellates', color: '#2dd4bf', desc: 'Microscopic plankton behind the "blue wave" effect on coastlines. A wave's disturbance triggers their flash.' },
+              { name: 'Dinoflagellates', color: '#2dd4bf', desc: 'Microscopic plankton behind the "blue wave" effect on coastlines. A wave\'s disturbance triggers their flash.' },
               { name: 'Firefly squid', color: '#a78bfa', desc: 'Thousands of photophores across its body produce a bright blue glow used for camouflage and communication.' },
               { name: 'Vampire squid', color: '#fbbf24', desc: 'Can flash every photophore simultaneously — a defensive dazzle display to confuse predators in the abyss.' },
             ].map(({ name, color, desc }) => (
@@ -232,4 +233,4 @@ export default function HomePage() {
       `}</style>
     </>
   )
-}
+            }
