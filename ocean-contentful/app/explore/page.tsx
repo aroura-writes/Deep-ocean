@@ -1,3 +1,5 @@
+'use client'
+
 import ScrollReveal from '@/components/ScrollReveal'
 
 const creatures = [
