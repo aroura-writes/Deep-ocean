@@ -10,9 +10,7 @@ export default function HomePage() {
 <div style={{ position: 'relative', height: '100vh', minHeight: '520px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
   
   {/* 👇 NOTICE THE '>' AT THE END OF THIS LINE BELOW */}
-  <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-       viewBox="0 0 680 520" preserveAspectRatio="xMidYMid slice"
-       xmlns="http://www.w3.org/2000/svg">
+  <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} viewBox="0 0 680 520" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
             <rect width="680" height="520" fill="#030d1a"/>
             {/* Stars */}
             {[
