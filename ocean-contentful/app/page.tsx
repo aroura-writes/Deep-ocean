@@ -32,10 +32,17 @@ export default function HomePage() {
             <path d="M0 312 Q170 300 340 312 Q510 324 680 312" stroke="#0d3352" strokeWidth=".5" fill="none" opacity=".8"/>
             <path d="M0 318 Q85 308 170 318 Q255 328 340 318 Q425 308 510 318 Q595 328 680 318" stroke="#1d6fa8" strokeWidth="1" fill="none" opacity=".4"/>
             {/* Glow dots */}
-            {[[90,325,'#38bdf8',.2],[210,335,'#2dd4bf',.9],[350,322,'#38bdf8',.4],[460,330,'#a78bfa',1.3],[580,326,'#2dd4bf',.6]].map(([cx,cy,fill,del],i)=>(
-              <circle key={i} cx={cx as number} cy={cy as number} r="2.5" fill={fill as string}
-                style={{ animation: `glowPulse 3s ${del}s ease-in-out infinite` }}/>
-            ))}
+{[
+  [90, 325, '#38bdf8', .2],
+  [210, 335, '#2dd4bf', .9],
+  [350, 322, '#38bdf8', .4],
+  [460, 330, '#a78bfa', 1.3],
+  [580, 326, '#2dd4bf', .6]
+].map(([cx, cy, fill, del], i) => (
+  <circle key={i} cx={cx} cy={cy} r="2.5" fill={fill as string}
+    style={{ animation: `glowPulse 3s ${del as number}s ease-in-out infinite` }}/>
+))}
+
             {/* Deep glow */}
             <ellipse cx="340" cy="420" rx="200" ry="90" fill="#0a3a5e" opacity=".3"/>
             {/* Jellyfish */}
