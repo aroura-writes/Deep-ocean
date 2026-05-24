@@ -1,8 +1,18 @@
 import { createClient } from 'contentful'
 
+// Fallbacks to check for all possible naming configurations across Vercel and local setups
+const spaceId = process.env.CONTENTFUL_SPACE_ID || process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+const token = process.env.CONTENTFUL_ACCESS_TOKEN || process.env.CONTENTFUL_DELIVERY_TOKEN || process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+
+// Defensive Warning: This will explicitly tell you in Vercel logs if the keys are blank 
+// instead of letting the Contentful SDK throw a cryptic "TypeError: Expected parameter accessToken"
+if (!spaceId || !token) {
+  console.warn(`⚠️ Contentful Configuration Missing! SpaceID Found: ${!!spaceId}, Token Found: ${!!token}`);
+}
+
 const client = createClient({
-  space:       process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!, // 👈 Changed from DELIVERY_TOKEN to ACCESS_TOKEN
+  space:       spaceId || 'MISSING_SPACE_ID', 
+  accessToken: token || 'MISSING_ACCESS_TOKEN',
 })
 
 // ── Types ────────────────────────────────────────────────────────────────────
