@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serene Bay</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0D0A1E;--bg2:#0A1628;--violet:#7C3AED;--coral:#FF6B6B;--teal:#2DD4BF;--green:#4ADE80;
+  --glass:rgba(255,255,255,0.06);--glass-border:rgba(255,255,255,0.12);
+  --text:#F0EFF8;--muted:rgba(240,239,248,0.6);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* BLOBS */
+.blob{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;opacity:0.35}
+.b1{width:600px;height:600px;background:var(--violet);top:-200px;left:-200px}
+.b2{width:500px;height:500px;background:#0E4D7A;top:50%;right:-150px}
+.b3{width:400px;height:400px;background:#1A5C3A;bottom:0;left:30%}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,10,30,0.6);backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border)}
+.logo{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--teal),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:500;letter-spacing:0.5px;transition:color 0.3s;cursor:pointer}
+.nav-links a:hover,.nav-links a.active{color:var(--teal)}
+
+/* PAGES */
+.page{display:none;position:relative;z-index:1;padding-top:80px;min-height:100vh}
+.page.active{display:block}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;position:relative;overflow:hidden}
+.hero-tag{display:inline-block;padding:0.35rem 1rem;background:rgba(45,212,191,0.15);border:1px solid rgba(45,212,191,0.3);border-radius:999px;font-size:0.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:1.5rem}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(4rem,10vw,8rem);font-weight:900;line-height:0.9;letter-spacing:-2px;margin-bottom:1.5rem}
+.hero h1 span{background:linear-gradient(135deg,#7C3AED,var(--coral),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.15rem;color:var(--muted);max-width:540px;line-height:1.7;margin-bottom:2.5rem}
+.cta-group{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{padding:0.8rem 2rem;border-radius:999px;font-size:0.9rem;font-weight:500;cursor:pointer;border:none;transition:all 0.3s;text-decoration:none;display:inline-block}
+.btn-primary{background:linear-gradient(135deg,var(--violet),var(--coral));color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(124,58,237,0.4)}
+.btn-outline{background:var(--glass);border:1px solid var(--glass-border);color:var(--text);backdrop-filter:blur(10px)}
+.btn-outline:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
+
+/* FEATURED SECTION */
+.section{padding:5rem 2.5rem}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.5rem,5vw,3.5rem);font-weight:900;margin-bottom:0.5rem}
+.section-sub{color:var(--muted);margin-bottom:3rem;font-size:1rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}
+.card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;cursor:pointer;backdrop-filter:blur(10px)}
+.card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4)}
+.card-img{height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
+.card-body{padding:1.25rem}
+.card-body h3{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:0.4rem}
+.card-body p{font-size:0.88rem;color:var(--muted);line-height:1.6}
+.tag{display:inline-block;padding:0.2rem 0.7rem;border-radius:999px;font-size:0.72rem;font-weight:500;margin-top:0.8rem}
+
+/* GALLERY */
+.gallery-filters{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:2.5rem}
+.filter-btn{padding:0.5rem 1.2rem;border-radius:999px;border:1px solid var(--glass-border);background:var(--glass);color:var(--muted);font-size:0.85rem;cursor:pointer;transition:all 0.3s;font-family:'Inter',sans-serif}
+.filter-btn.active,.filter-btn:hover{background:rgba(45,212,191,0.2);border-color:var(--teal);color:var(--teal)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem}
+.gallery-item{border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:transform 0.3s}
+.gallery-item:hover{transform:scale(1.02)}
+.gallery-item:nth-child(3n){grid-row:span 1}
+.gallery-img{width:100%;height:220px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;background:var(--glass);border:1px solid var(--glass-border)}
+.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,10,30,0.9) 0%,transparent 50%);opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:1rem}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-label{color:#fff;font-size:0.85rem;font-weight:500}
+.cat-badge{position:absolute;top:0.7rem;right:0.7rem;padding:0.25rem 0.7rem;border-radius:999px;font-size:0.7rem;font-weight:600;backdrop-filter:blur(10px)}
+
+/* BLOG */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem}
+.blog-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;transition:transform 0.3s;backdrop-filter:blur(10px)}
+.blog-card:hover{transform:translateY(-4px)}
+.blog-hero{height:200px;display:flex;align-items:center;justify-content:center;font-size:6rem;position:relative}
+.blog-content{padding:1.5rem}
+.blog-content .tag{margin:0 0 0.8rem}
+.blog-content h2{font-family:'Barlow Condensed',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:0.8rem;line-height:1.1}
+.blog-content p{font-size:0.9rem;color:var(--muted);line-height:1.7}
+.blog-meta{display:flex;align-items:center;gap:1rem;margin-top:1.2rem;font-size:0.8rem;color:var(--muted)}
+.read-more{color:var(--teal);font-size:0.85rem;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem;margin-top:1rem;background:none;border:none;font-family:'Inter',sans-serif}
+
+/* LITERACY */
+.literacy-hero{text-align:center;padding:4rem 2rem;border-bottom:1px solid var(--glass-border)}
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:3rem}
+.eco-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:2rem;backdrop-filter:blur(10px);transition:transform 0.3s}
+.eco-card:hover{transform:translateY(-4px)}
+.eco-icon{font-size:2.5rem;margin-bottom:1rem}
+.eco-card h3{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:0.6rem;color:var(--teal)}
+.eco-card p{font-size:0.9rem;color:var(--muted);line-height:1.7}
+.fact-strip{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(45,212,191,0.1));border:1px solid var(--glass-border);border-radius:20px;padding:2.5rem;margin:3rem 0;text-align:center;backdrop-filter:blur(10px)}
+.fact-strip h3{font-family:'Barlow Condensed',sans-serif;font-size:2rem;margin-bottom:1rem}
+.facts-row{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem}
+.fact-item{text-align:center}
+.fact-num{font-family:'Barlow Condensed',sans-serif;font-size:2.5rem;font-weight:900;color:var(--teal)}
+.fact-label{font-size:0.82rem;color:var(--muted)}
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+.tip{background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:1.2rem;backdrop-filter:blur(10px)}
+.tip-num{font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--violet),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tip p{font-size:0.85rem;color:var(--muted);margin-top:0.3rem;line-height:1.6}
+
+/* ABOUT */
+.about-hero{text-align:center;padding:4rem 2rem 2rem;max-width:700px;margin:0 auto}
+.mission-card{background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(45,212,191,0.1));border:1px solid var(--glass-border);border-radius:24px;padding:3rem;margin:2rem auto;max-width:800px;backdrop-filter:blur(10px);text-align:center}
+.mission-card h2{font-family:'Barlow Condensed',sans-serif;font-size:2.5rem;font-weight:900;margin-bottom:1rem}
+.mission-card p{color:var(--muted);line-height:1.8;font-size:1rem}
+.values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;max-width:900px;margin:2rem auto}
+.value-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;padding:1.5rem;text-align:center;backdrop-filter:blur(10px)}
+.value-icon{font-size:2rem;margin-bottom:0.8rem}
+.value-card h4{font-family:'Barlow Condensed',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:0.4rem;color:var(--teal)}
+.value-card p{font-size:0.83rem;color:var(--muted);line-height:1.6}
+.team-card{display:flex;align-items:center;gap:1.5rem;background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:1.5rem;max-width:600px;margin:1.5rem auto;backdrop-filter:blur(10px)}
+.avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;border-top:1px solid var(--glass-border);color:var(--muted);font-size:0.82rem;position:relative;z-index:1}
+footer span{color:var(--teal)}
+
+/* FOREST BG COLORS */
+.forest-bg{background:linear-gradient(135deg,#0D1F0A,#1A3A10,#0A2B08)}
+.ocean-bg{background:linear-gradient(135deg,#0A0E2E,#0D2B5E,#0A3D5C)}
+.desert-bg{background:linear-gradient(135deg,#2E1A05,#4A2E0A,#3D2205)}
+.waterfall-bg{background:linear-gradient(135deg,#051A2E,#0A2E3D,#05263D)}
+.rose-bg{background:linear-gradient(135deg,#2E0A1A,#4A0E28,#3D0A22)}
+.lavender-bg{background:linear-gradient(135deg,#1A0A2E,#2E1A4A,#220A3D)}
+.sunflower-bg{background:linear-gradient(135deg,#2E2005,#4A340A,#3D2805)}
+
+</style>
+</head>
+<body>
+
+<!-- Ambient blobs -->
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">🌿 Serene Bay</div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="showPage('gallery')" id="nav-gallery">Gallery</a></li>
+    <li><a onclick="showPage('blog')" id="nav-blog">Flower Blog</a></li>
+    <li><a onclick="showPage('literacy')" id="nav-literacy">Nature Literacy</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">About</a></li>
+  </ul>
+</nav>
+
+<!-- ======= HOME PAGE ======= -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-tag">🌊 Where Nature Speaks</div>
+    <h1>Find Your<br><span>Wild Serenity</span></h1>
+    <p>Immerse yourself in the breathtaking beauty of forests, oceans, deserts, and waterfalls. Nature is calling — are you listening?</p>
+    <div class="cta-group">
+      <a class="btn btn-primary" onclick="showPage('gallery')">Explore Gallery</a>
+      <a class="btn btn-outline" onclick="showPage('blog')">Flower Blog</a>
+    </div>
+  </div>
+
+  <!-- Featured -->
+  <div class="section">
+    <div class="section-title">Explore Nature's Wonders</div>
+    <div class="section-sub">From ancient forests to cascading waterfalls — every landscape has a story</div>
+    <div class="cards-grid">
+      <div class="card" onclick="showPage('gallery')">
+        <div class="card-img forest-bg">🌲</div>
+        <div class="card-body">
+          <h3>Ancient Forests</h3>
+          <p>Step into cathedral-like canopies where centuries-old trees breathe life into the earth beneath your feet.</p>
+          <span class="tag" style="background:rgba(74,222,128,0.15);color:var(--green)">Explore →</span>
+        </div>
+      </div>
+      <div class="card" onclick="showPage('gallery')">
+        <div class="card-img ocean-bg">🌊</div>
+        <div class="card-body">
+          <h3>Vast Oceans</h3>
+          <p>From turquoise shores to deep navy depths, the ocean holds mysteries that have captivated humanity forever.</p>
+          <span class="tag" style="background:rgba(45,212,191,0.15);color:var(--teal)">Explore →</span>
+        </div>
+      </div>
+      <div class="card" onclick="showPage('gallery')">
+        <div class="card-img desert-bg">🏜️</div>
+        <div class="card-body">
+          <h3>Desert Silences</h3>
+          <p>Discover the quiet poetry of sand dunes shifting beneath golden light, where survival is an art form.</p>
+          <span class="tag" style="background:rgba(255,107,107,0.15);color:var(--coral)">Explore →</span>
+        </div>
+      </div>
+      <div class="card" onclick="showPage('gallery')">
+        <div class="card-img waterfall-bg">💧</div>
+        <div class="card-body">
+          <h3>Roaring Waterfalls</h3>
+          <p>Feel the mist of waterfalls that plunge from ancient cliffs, carving paths through stone over millennia.</p>
+          <span class="tag" style="background:rgba(124,58,237,0.15);color:#A78BFA)">Explore →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flower Preview -->
+  <div class="section" style="background:rgba(255,255,255,0.02);border-top:1px solid var(--glass-border);border-bottom:1px solid var(--glass-border)">
+    <div class="section-title">From the Flower Blog</div>
+    <div class="section-sub">Stories, history, and wonder hidden within every petal</div>
+    <div class="cards-grid">
+      <div class="card" onclick="showPage('blog')">
+        <div class="card-img rose-bg">🌹</div>
+        <div class="card-body">
+          <h3>The Eternal Rose</h3>
+          <p>5,000 years of history, poetry, and passion wrapped in velvet petals.</p>
+          <span class="tag" style="background:rgba(255,107,107,0.15);color:var(--coral)">Read →</span>
+        </div>
+      </div>
+      <div class="card" onclick="showPage('blog')">
+        <div class="card-img lavender-bg">💜</div>
+        <div class="card-body">
+          <h3>Lavender Fields</h3>
+          <p>From Provence to your pillow — the ancient calming herb with a purple soul.</p>
+          <span class="tag" style="background:rgba(124,58,237,0.15);color:#A78BFA">Read →</span>
+        </div>
+      </div>
+      <div class="card" onclick="showPage('blog')">
+        <div class="card-img sunflower-bg">🌻</div>
+        <div class="card-body">
+          <h3>Heliotrope: Sun Follower</h3>
+          <p>The sunflower's ancient devotion to light is encoded in its very name.</p>
+          <span class="tag" style="background:rgba(255,200,50,0.15);color:#FCD34D">Read →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA band -->
+  <div class="section" style="text-align:center">
+    <div class="fact-strip">
+      <h3>🌍 Did You Know?</h3>
+      <p style="color:var(--muted)">Earth's forests, oceans, and deserts together support over 8 million species — most still undiscovered.</p>
+      <div class="facts-row">
+        <div class="fact-item"><div class="fact-num">31%</div><div class="fact-label">of Earth covered by forests</div></div>
+        <div class="fact-item"><div class="fact-num">71%</div><div class="fact-label">of Earth is ocean</div></div>
+        <div class="fact-item"><div class="fact-num">8M+</div><div class="fact-label">known species on Earth</div></div>
+        <div class="fact-item"><div class="fact-num">400K</div><div class="fact-label">species of plants</div></div>
+      </div>
+      <br>
+      <a class="btn btn-primary" onclick="showPage('literacy')" style="margin-top:1rem">Learn More</a>
+    </div>
+  </div>
+  <footer>© 2025 <span>Serene Bay</span> — A love letter to the natural world</footer>
+</div>
+
+<!-- ======= GALLERY PAGE ======= -->
+<div class="page" id="page-gallery">
+  <div class="section">
+    <div class="section-title">Nature Gallery</div>
+    <div class="section-sub">A visual journey through Earth's most breathtaking landscapes</div>
+    <div class="gallery-filters">
+      <button class="filter-btn active" onclick="filterGallery('all',this)">All</button>
+      <button class="filter-btn" onclick="filterGallery('forest',this)">🌲 Forests</button>
+      <button class="filter-btn" onclick="filterGallery('ocean',this)">🌊 Oceans</button>
+      <button class="filter-btn" onclick="filterGallery('desert',this)">🏜️ Deserts</button>
+      <button class="filter-btn" onclick="filterGallery('waterfall',this)">💧 Waterfalls</button>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <!-- Forest -->
+      <div class="gallery-item" data-cat="forest">
+        <div class="gallery-img forest-bg" style="height:260px;font-size:6rem">🌲</div>
+        <span class="cat-badge" style="background:rgba(74,222,128,0.25);color:var(--green)">Forest</span>
+        <div class="gallery-overlay"><span class="gallery-label">Redwood Cathedral, California</span></div>
+      </div>
+      <div class="gallery-item" data-cat="forest">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#0A1F07,#162E0A)">🍃</div>
+        <span class="cat-badge" style="background:rgba(74,222,128,0.25);color:var(--green)">Forest</span>
+        <div class="gallery-overlay"><span class="gallery-label">Amazon Canopy, Brazil</span></div>
+      </div>
+      <div class="gallery-item" data-cat="forest">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#122A0D,#1E3D12)">🌿</div>
+        <span class="cat-badge" style="background:rgba(74,222,128,0.25);color:var(--green)">Forest</span>
+        <div class="gallery-overlay"><span class="gallery-label">Black Forest, Germany</span></div>
+      </div>
+      <div class="gallery-item" data-cat="forest">
+        <div class="gallery-img" style="height:200px;font-size:5rem;background:linear-gradient(135deg,#0E2208,#1A3310)">🎋</div>
+        <span class="cat-badge" style="background:rgba(74,222,128,0.25);color:var(--green)">Forest</span>
+        <div class="gallery-overlay"><span class="gallery-label">Bamboo Grove, Kyoto</span></div>
+      </div>
+      <!-- Ocean -->
+      <div class="gallery-item" data-cat="ocean">
+        <div class="gallery-img ocean-bg" style="height:260px;font-size:6rem">🌊</div>
+        <span class="cat-badge" style="background:rgba(45,212,191,0.25);color:var(--teal)">Ocean</span>
+        <div class="gallery-overlay"><span class="gallery-label">Maldives Atoll</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ocean">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#05142B,#0A2040)">🐚</div>
+        <span class="cat-badge" style="background:rgba(45,212,191,0.25);color:var(--teal)">Ocean</span>
+        <div class="gallery-overlay"><span class="gallery-label">Great Barrier Reef</span></div>
+      </div>
+      <div class="gallery-item" data-cat="ocean">
+        <div class="gallery-img" style="height:240px;font-size:5rem;background:linear-gradient(135deg,#081630,#0D2650)">🐋</div>
+        <span class="cat-badge" style="background:rgba(45,212,191,0.25);color:var(--teal)">Ocean</span>
+        <div class="gallery-overlay"><span class="gallery-label">Norwegian Fjords</span></div>
+      </div>
+      <!-- Desert -->
+      <div class="gallery-item" data-cat="desert">
+        <div class="gallery-img desert-bg" style="height:220px;font-size:6rem">🏜️</div>
+        <span class="cat-badge" style="background:rgba(255,107,107,0.25);color:var(--coral)">Desert</span>
+        <div class="gallery-overlay"><span class="gallery-label">Sahara at Dusk</span></div>
+      </div>
+      <div class="gallery-item" data-cat="desert">
+        <div class="gallery-img" style="height:260px;font-size:5rem;background:linear-gradient(135deg,#3D1F05,#5C2E08)">🌵</div>
+        <span class="cat-badge" style="background:rgba(255,107,107,0.25);color:var(--coral)">Desert</span>
+        <div class="gallery-overlay"><span class="gallery-label">Sonoran Desert, Arizona</span></div>
+      </div>
+      <div class="gallery-item" data-cat="desert">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#2E1505,#4A2208)">🐪</div>
+        <span class="cat-badge" style="background:rgba(255,107,107,0.25);color:var(--coral)">Desert</span>
+        <div class="gallery-overlay"><span class="gallery-label">Arabian Empty Quarter</span></div>
+      </div>
+      <!-- Waterfall -->
+      <div class="gallery-item" data-cat="waterfall">
+        <div class="gallery-img waterfall-bg" style="height:260px;font-size:6rem">💧</div>
+        <span class="cat-badge" style="background:rgba(124,58,237,0.25);color:#A78BFA">Waterfall</span>
+        <div class="gallery-overlay"><span class="gallery-label">Angel Falls, Venezuela</span></div>
+      </div>
+      <div class="gallery-item" data-cat="waterfall">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#051A30,#0A2640)">🌈</div>
+        <span class="cat-badge" style="background:rgba(124,58,237,0.25);color:#A78BFA">Waterfall</span>
+        <div class="gallery-overlay"><span class="gallery-label">Iguazú Falls, Argentina</span></div>
+      </div>
+      <div class="gallery-item" data-cat="waterfall">
+        <div class="gallery-img" style="height:220px;font-size:5rem;background:linear-gradient(135deg,#071E30,#0D2E46)">🏔️</div>
+        <span class="cat-badge" style="background:rgba(124,58,237,0.25);color:#A78BFA">Waterfall</span>
+        <div class="gallery-overlay"><span class="gallery-label">Niagara Falls, Canada</span></div>
+      </div>
+    </div>
+  </div>
+  <footer>© 2025 <span>Serene Bay</span> — A love letter to the natural world</footer>
+</div>
+
+<!-- ======= FLOWER BLOG PAGE ======= -->
+<div class="page" id="page-blog">
+  <div class="section">
+    <div class="section-title">🌸 Flower Blog</div>
+    <div class="section-sub">Discover the rich history, science, and symbolism behind nature's most beautiful creations</div>
+    <div class="blog-grid">
+
+      <div class="blog-card">
+        <div class="blog-hero rose-bg">🌹</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(255,107,107,0.15);color:var(--coral)">History & Symbolism</span>
+          <h2>The Rose: 5,000 Years of Devotion</h2>
+          <p>The rose is arguably humanity's most beloved flower. Fossil evidence dates wild roses back 35 million years, but cultivated roses trace their history to ancient China around 5,000 years ago. From Cleopatra's legendary rose-petal banquets to Shakespeare's "A rose by any other name," this flower has woven itself into the fabric of human civilization.</p>
+          <p style="margin-top:0.8rem">Each color carries meaning: red for passionate love, white for purity, yellow for friendship, and black for elegance or farewell. In the Victorian era, exchanging roses was a coded language called floriography — a secret conversation in petals.</p>
+          <div class="blog-meta">
+            <span>🗓 Ancient Origins</span>
+            <span>📍 Worldwide</span>
+            <span>🔬 Rosa genus</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-hero lavender-bg">💜</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(124,58,237,0.15);color:#A78BFA">Healing & Fragrance</span>
+          <h2>Lavender: The Ancient Healer</h2>
+          <p>Lavender has been used for over 2,500 years. The Romans scented their baths with it — the name itself comes from the Latin "lavare," meaning "to wash." Ancient Egyptians used lavender oil in their mummification rituals, and traces of it were found in Tutankhamun's tomb.</p>
+          <p style="margin-top:0.8rem">Modern science confirms what ancient healers knew: lavender's linalool compound genuinely calms the nervous system. The fields of Provence, France produce 80% of the world's finest lavender essential oil, filling the air with that iconic purple haze every summer.</p>
+          <div class="blog-meta">
+            <span>🗓 2500 BC</span>
+            <span>📍 Mediterranean</span>
+            <span>🔬 Lavandula</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-hero sunflower-bg">🌻</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(255,200,50,0.15);color:#FCD34D">Biology & Wonder</span>
+          <h2>Sunflower: Born to Follow the Sun</h2>
+          <p>The sunflower's heliotropism — turning to track the sun from east to west — is one of nature's most elegant behaviors. Young sunflowers follow the sun during the day and reorient at night; once mature, they permanently face east to warm visiting bees and improve pollination.</p>
+          <p style="margin-top:0.8rem">Native Americans cultivated sunflowers over 5,000 years ago for food, dye, and medicine. A single sunflower head is actually 1,000–2,000 tiny flowers arranged in a perfect Fibonacci spiral — mathematics and beauty in perfect harmony.</p>
+          <div class="blog-meta">
+            <span>🗓 3000 BC</span>
+            <span>📍 North America</span>
+            <span>🔬 Helianthus annuus</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-hero" style="background:linear-gradient(135deg,#051A1A,#0A2E2E)">🌸</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(45,212,191,0.15);color:var(--teal)">Culture & Tradition</span>
+          <h2>Cherry Blossom: The Art of Impermanence</h2>
+          <p>In Japan, the cherry blossom (sakura) blooms for only one to two weeks each spring — and that fleetingness is precisely what makes it sacred. The philosophical concept of <em>mono no aware</em> (the pathos of things) is embodied in sakura: beauty made more beautiful by its brevity.</p>
+          <p style="margin-top:0.8rem">Hanami — flower viewing — has been practiced for over 1,000 years. Japanese weather forecasters issue "sakura front" predictions, tracking the bloom's northward progression like a pink wave washing over the archipelago.</p>
+          <div class="blog-meta">
+            <span>🗓 794 AD</span>
+            <span>📍 Japan</span>
+            <span>🔬 Prunus serrulata</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-hero" style="background:linear-gradient(135deg,#1A100A,#2E1A0D)">🪷</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(255,107,107,0.15);color:var(--coral)">Spirituality & Myth</span>
+          <h2>Lotus: Rising from Mud into Light</h2>
+          <p>The lotus grows in murky, muddy water yet emerges each morning immaculate — a living metaphor that has inspired Buddhist, Hindu, and Egyptian spirituality for millennia. The ancient Egyptians saw the lotus as a symbol of creation itself: the sun god Ra emerging from a lotus at the dawn of the universe.</p>
+          <p style="margin-top:0.8rem">Remarkably, lotus seeds can remain dormant for over 1,300 years and still germinate. The lotus effect — the plant's self-cleaning superhydrophobic surface — has inspired nano-engineered materials in modern technology.</p>
+          <div class="blog-meta">
+            <span>🗓 Ancient Egypt</span>
+            <span>📍 Asia & Africa</span>
+            <span>🔬 Nelumbo nucifera</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="blog-card">
+        <div class="blog-hero" style="background:linear-gradient(135deg,#0A1A2E,#0E2440)">🌼</div>
+        <div class="blog-content">
+          <span class="tag" style="background:rgba(74,222,128,0.15);color:var(--green)">Medicine & Science</span>
+          <h2>Chamomile: The Humble Doctor</h2>
+          <p>Chamomile has been called "the plant's physician" — it reportedly helps nearby plants grow stronger. Used in medicine for at least 5,000 years, ancient Egyptians dedicated chamomile to Ra and used it to treat malaria. The Romans used it in incense and beverages.</p>
+          <p style="margin-top:0.8rem">Modern research confirms chamomile's apigenin compound binds to brain receptors to produce mild sedative and anxiety-reducing effects. It's one of the most consumed medicinal herbs in the world, drunk as tea by over one million people every day.</p>
+          <div class="blog-meta">
+            <span>🗓 3000 BC</span>
+            <span>📍 Europe & Asia</span>
+            <span>🔬 Matricaria chamomilla</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer>© 2025 <span>Serene Bay</span> — A love letter to the natural world</footer>
+</div>
+
+<!-- ======= NATURE LITERACY PAGE ======= -->
+<div class="page" id="page-literacy">
+  <div class="section">
+    <div class="literacy-hero">
+      <div class="hero-tag">📚 Nature Education</div>
+      <div class="section-title">Nature Literacy</div>
+      <p style="color:var(--muted);max-width:600px;margin:1rem auto;line-height:1.7">Understanding the world around us deepens our connection to it. Explore ecosystems, fascinating facts, and ways you can protect what we love.</p>
+    </div>
+
+    <!-- Ecosystems -->
+    <div style="margin-top:3rem">
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;margin-bottom:0.5rem">🌍 Earth's Major Ecosystems</h2>
+      <p style="color:var(--muted);margin-bottom:1.5rem">Each ecosystem is a unique web of life, finely balanced over millions of years</p>
+      <div class="eco-grid">
+        <div class="eco-card">
+          <div class="eco-icon">🌲</div>
+          <h3>Tropical Rainforest</h3>
+          <p>Covering only 6% of Earth's surface, tropical rainforests house over 50% of the world's plant and animal species. The Amazon produces 20% of Earth's oxygen and cycles vast amounts of water through transpiration, influencing global rainfall patterns.</p>
+        </div>
+        <div class="eco-card">
+          <div class="eco-icon">🌊</div>
+          <h3>Marine Ecosystems</h3>
+          <p>Oceans cover 71% of our planet and regulate global temperature, absorbing 30% of all human CO₂ emissions. Coral reefs, though covering less than 1% of the ocean floor, support 25% of all marine species and protect coastlines from storm surge.</p>
+        </div>
+        <div class="eco-card">
+          <div class="eco-icon">🏜️</div>
+          <h3>Desert Ecosystems</h3>
+          <p>Far from barren, deserts support highly adapted life. The Sahara's sand seas hide ancient aquifers. Desert plants like cacti store hundreds of liters of water. Desert animals like the fennec fox have evolved enormous ears to dissipate heat.</p>
+        </div>
+        <div class="eco-card">
+          <div class="eco-icon">🌾</div>
+          <h3>Grasslands & Savannas</h3>
+          <p>Grasslands cover 40% of Earth's ice-free land and feed billions through agriculture. African savannas host the world's largest land migrations — 1.5 million wildebeest crossing the Serengeti annually in one of nature's most spectacular events.</p>
+        </div>
+        <div class="eco-card">
+          <div class="eco-icon">🏔️</div>
+          <h3>Mountain Ecosystems</h3>
+          <p>Mountains act as "water towers," providing fresh water to nearly half of humanity. As altitude increases, life zones stack like layers of latitude — from tropical valleys to alpine tundra — each with its own community of specially adapted species.</p>
+        </div>
+        <div class="eco-card">
+          <div class="eco-icon">🌿</div>
+          <h3>Wetlands</h3>
+          <p>Wetlands are among Earth's most productive ecosystems, filtering water, absorbing floods, and storing carbon at twice the rate of forests. Mangroves, a coastal wetland, sequester up to 10 times more carbon per hectare than any other ecosystem.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fun Facts -->
+    <div class="fact-strip">
+      <h3>🔭 Astonishing Nature Facts</h3>
+      <div class="facts-row">
+        <div class="fact-item"><div class="fact-num">3T</div><div class="fact-label">trees on Earth</div></div>
+        <div class="fact-item"><div class="fact-num">1,000+</div><div class="fact-label">species lost each year</div></div>
+        <div class="fact-item"><div class="fact-num">80%</div><div class="fact-label">of ocean unexplored</div></div>
+        <div class="fact-item"><div class="fact-num">200M</div><div class="fact-label">years of insect evolution</div></div>
+        <div class="fact-item"><div class="fact-num">97%</div><div class="fact-label">of water is saltwater</div></div>
+      </div>
+    </div>
+
+    <!-- Conservation Tips -->
+    <div>
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;margin-bottom:0.5rem">🌱 Conservation Tips</h2>
+      <p style="color:var(--muted);margin-bottom:1.5rem">Small actions, multiplied by millions of people, reshape the world</p>
+      <div class="tips-grid">
+        <div class="tip"><div class="tip-num">01</div><p>Plant native species in your garden — they support local pollinators and require less water than exotic plants.</p></div>
+        <div class="tip"><div class="tip-num">02</div><p>Reduce single-use plastic. Over 8 million tons of plastic enter our oceans annually, harming marine life.</p></div>
+        <div class="tip"><div class="tip-num">03</div><p>Support reforestation projects. A single tree absorbs up to 22kg of CO₂ per year over its lifetime.</p></div>
+        <div class="tip"><div class="tip-num">04</div><p>Choose sustainably sourced food. Regenerative agriculture restores soil health and supports biodiversity.</p></div>
+        <div class="tip"><div class="tip-num">05</div><p>Reduce light pollution. Artificial light disrupts migration, pollination, and animal behavior worldwide.</p></div>
+        <div class="tip"><div class="tip-num">06</div><p>Learn and share. Nature literacy is itself an act of conservation — understanding inspires protection.</p></div>
+      </div>
+    </div>
+  </div>
+  <footer>© 2025 <span>Serene Bay</span> — A love letter to the natural world</footer>
+</div>
+
+<!-- ======= ABOUT PAGE ======= -->
+<div class="page" id="page-about">
+  <div class="section">
+    <div class="about-hero">
+      <div class="hero-tag">🌿 Our Story</div>
+      <div class="section-title">About Serene Bay</div>
+      <p style="color:var(--muted);line-height:1.8;margin-top:1rem">Serene Bay was born from a simple belief: that beauty, when shared, multiplies. We built this space for those who feel most alive in the wild.</p>
+    </div>
+
+    <div class="mission-card">
+      <h2>🌊 Our Mission</h2>
+      <p>To inspire wonder, deepen understanding, and cultivate reverence for the natural world. We believe that every person who falls in love with nature becomes a guardian of it — and that the first step toward protecting something is truly seeing it.</p>
+      <br>
+      <p>Serene Bay curates nature's most awe-inspiring landscapes, tells the untold stories of flowers that have shaped human history, and educates visitors on the ecosystems that sustain all life on Earth. We are not just a website. We are an invitation.</p>
+    </div>
+
+    <div style="text-align:center;margin-top:3rem">
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;margin-bottom:2rem">What We Stand For</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-icon">🔭</div>
+        <h4>Wonder</h4>
+        <p>We believe curiosity is the root of all conservation. Every fact we share is an invitation to look more closely.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🤝</div>
+        <h4>Accessibility</h4>
+        <p>Nature belongs to everyone. Our content is free, open, and designed for all ages and backgrounds.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">📚</div>
+        <h4>Education</h4>
+        <p>Understanding ecosystems and species deeply connects us to why they matter — and motivates us to protect them.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon">🌱</div>
+        <h4>Stewardship</h4>
+        <p>We advocate for gentle coexistence with nature and weave conservation into every corner of our content.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:3rem">
+      <h2 style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:700;margin-bottom:1.5rem">The Team Behind the Bay</h2>
+    </div>
+    <div class="team-card">
+      <div class="avatar" style="background:linear-gradient(135deg,#1A3D10,#2E6318)">🌿</div>
+      <div>
+        <p style="font-weight:600;font-size:1rem">Aria Sinclair</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.2rem">Founder & Nature Writer</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;line-height:1.6">Former botanist who traded the lab for a laptop to share nature's stories with the world. Believes a well-told story can change everything.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar" style="background:linear-gradient(135deg,#051A2E,#0D3A5C)">🌊</div>
+      <div>
+        <p style="font-weight:600;font-size:1rem">Marco Delacroix</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.2rem">Photographer & Visual Curator</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;line-height:1.6">Has photographed 47 countries' wild spaces. Believes every landscape, properly seen, is a kind of prayer. Based between the Alps and the Mediterranean coast.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar" style="background:linear-gradient(135deg,#2E1A05,#5C3410)">🏜️</div>
+      <div>
+        <p style="font-weight:600;font-size:1rem">Seren Okafor</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.2rem">Ecologist & Education Lead</p>
+        <p style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem;line-height:1.6">Wildlife ecologist with a passion for making science beautiful and accessible. Writes our Nature Literacy content from field notes gathered across three continents.</p>
+      </div>
+    </div>
+
+    <div class="mission-card" style="margin-top:3rem">
+      <h2>💌 Join the Journey</h2>
+      <p>Serene Bay is a living project — growing with every season, every bloom, and every discovery. We're always looking for nature writers, photographers, and educators who share our passion.</p>
+      <br>
+      <a class="btn btn-primary" style="margin-top:0.5rem">Get in Touch</a>
+    </div>
+  </div>
+  <footer>© 2025 <span>Serene Bay</span> — A love letter to the natural world</footer>
+</div>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function filterGallery(cat, btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gallery-item').forEach(item=>{
+    if(cat==='all'||item.dataset.cat===cat){
+      item.style.display='';
+    } else {
+      item.style.display='none';
+    }
+  });
+}
+</script>
+</body>
+</html>
